@@ -14,7 +14,8 @@ C Monster World Web Version (2013). Very Not Funny
 ![C Monster World Web Ver Screenshot03](https://github.com/uyu423/C-Monster-World-Web-Game/blob/master/screenshot03.png)
 ![C Monster World Web Ver Screenshot04](https://github.com/uyu423/C-Monster-World-Web-Game/blob/master/screenshot04.png)
 * 모티브로 한 게임은 [Palmple Inc.](http://www.palmple.com/)의 __[데빌메이커: 도쿄](http://www.palmple.com/devilmaker/intro)__ 게임이다.
-* 사전에 만들어본 __[C-Monster World Console Version](https://github.com/uyu423/C-Monster-World-Console-Game)__에 비해 변화가 꽤 있다. 프로젝트 발표 하루 전날 Source Logic과 알고리즘 갈아 엎는다고 피똥쌌다.
+* 사전에 만들어본 __[C-Monster World Console Version](https://github.com/uyu423/C-Monster-World-Console-Game)__에 비해 변화가 꽤 있다. 
+* 프로젝트 발표 하루 전날 __Source Logic과 Algorithm즘 갈아 엎는다고 피똥쌌다.__
 * 기본 기능는 __진행 방향 선택__, __캐릭터 스탯 투자__ 정도.
 * __진행 방향 선택__을 택하면 __여러 이벤트가 확률적__으로 나타난다. (몬스터 출현, 함정 출현, 경험치 발견, 체력 회복)
 * 전투 시스템으로 __가위바위보__를 채택했다.
@@ -25,7 +26,8 @@ C Monster World Web Version (2013). Very Not Funny
 * 난이도가 높은 방향일 수록 __한번의 이동거리가 길며, 높은 %의 체력 회복이 나타난다.__
 * 함정을 만났을 때 가위바위보를 __이기지 못하면 데미지__를 입으며, __이겼을 경우 다음 함정 데미지가 강해진다.__
 * __전략적 진행으로 진행한 거리로 경쟁__하는 게임 제작이 목표였다.
-* 그리고 당연히 위에서 언급한 __랭킹 시스템은 없다.__ 하지만 LocalStorage나 Cookie. 더 크게 봤을때 Server를 사용하면 구현하고 남는다.
+* 그리고 당연히 위에서 언급한 __랭킹 시스템 기능은 없다.__ 
+* 사실 위 기능은 __LocalStorage__나 __Cookie.__ 더 크게 봤을때 __Server__, __Database__를 사용하면 구현하고 남는다.
 * __브금(BGM)이 꽤나 흥겹다.__
 
 ### Productor Overview
