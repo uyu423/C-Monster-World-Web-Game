@@ -1,0 +1,281 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>New C-Monster World</title>
+    <style>
+        .box1 {
+            left: 272px;
+            top: 520px;
+            position: absolute;
+            border-width: thick;
+            border-style: dashed;
+            border-bottom-color: yellow;
+            border-left-color: red;
+            border-top-color: blue;
+            border-right-color: green;
+            border-radius: 40px 40px 40px 40px;
+        }
+        .box2 {
+            left: 213px;
+            top: 620px;
+            position: absolute;
+            border-width: thick;
+            border-style: dashed;
+            border-color: black;
+            border-radius: 50px 50px 50px 50px;
+        }
+    </style>
+    <script src="./draws.js"></script>
+    <script src="./events.js"></script>
+    <script src="./functions.js"></script>
+    <script src="./TRAPnMON.js"></script>
+    <script>
+        var ctx;
+        var canvasclick;
+        var music;
+        var statclick;
+        var gameover_flag = 0;
+
+        var meter = 0;
+        var trapdam = 15;
+        var result_rsp;
+        var char_rsp;
+        var com_rsp;
+        var interval;
+        var size = 1;
+        var who;
+
+        var now_trap = 0;
+        var now_monster = 0;
+
+        var eve = [
+                    ["EVENT_MONSTER(1)", "EVENT_RECOVER(0)", "EVENT_TRAP()"],
+                    ["EVENT_TRAP()", "EVENT_RECOVER(1)", "EVENT_MONSTER(2)"],
+                    ["EVENT_MONSTER(0)", "EVENT_RECOVER(2)", "EVENT_TRAP()"]];   //함수를 배열로 저장
+
+        function statcharobj(hp, ap, dp, charexp, monexp) {
+            this.lv = 1;
+            this.max_hp = hp;
+            this.now_hp = this.max_hp;
+            this.ap = ap;
+            this.dp = dp;
+            this.max_exp = charexp; //max, now_exp는 사용자만 할당
+            this.now_exp = 0;
+            this.exp = monexp;  //exp는 몬스터가 죽으면서 제공하는 경험치로 몬스터에게만 할당
+            this.point = 3; //스탯 포인트
+        }
+        var char = new statcharobj(100, 20, 5, 100, 0);    //사용자 캐릭터
+        var monster = [];
+        monster[0] = new statcharobj(40, 20, 5, 0, 35); //약한 몬스터
+        monster[1] = new statcharobj(150, 40, 10, 0, 70);   //강한 몬스터
+        monster[2] = new statcharobj(444, 111, 18, 0, 180);  //보몹
+
+        function start_click(ev)
+        {
+            var mx;
+            var my;
+            if (ev.layerX || ev.layerX == 0) {
+                mx = ev.layerX;
+                my = ev.layerY;
+            }
+            else if (ev.offsetX || ev.offsetY == 0) {
+                mx = ev.offsetX;
+                my = ev.offsetY;
+            }
+            if ((mx > 350 && mx < 550) && (my > 350 && my < 400)) {
+                    start();
+           }
+        }
+
+        function restart_click(ev) {
+            var mx;
+            var my;
+            if (ev.layerX || ev.layerX == 0) {
+                mx = ev.layerX;
+                my = ev.layerY;
+            }
+            else if (ev.offsetX || ev.offsetY == 0) {
+                mx = ev.offsetX;
+                my = ev.offsetY;
+            }
+            if ((mx > 350 && mx < 550) && (my > 350 && my < 400)) {
+                window.location.reload();
+            }
+        }
+
+        var random;
+        function arrow_click(ev)
+        {
+            var mx;
+            var my;
+            if (ev.layerX || ev.layerX == 0) {
+                mx = ev.layerX;
+                my = ev.layerY;
+            }
+            else if (ev.offsetX || ev.offsetY == 0) {
+                mx = ev.offsetX;
+                my = ev.offsetY;
+            }
+            if ((mx > leftbx && mx < leftbx + objwid) && (my > leftby && my < leftby + objhei)) {
+                random = Math.floor(Math.random() * 3);
+                go(90 + Math.floor(Math.random() * 20));
+                eval(eve[0][random]); //eval을 쓰면 배열안의 문자열 그대로 함수처럼 사용할 수 있음
+            }
+            if ((mx > centerbx && mx < centerbx + objwid) && (my > centerby && my < centerby + objhei)) {
+                random = Math.floor(Math.random() * 3);
+                go(190 + Math.floor(Math.random() * 20));
+                eval(eve[1][random]); //eval을 쓰면 배열안의 문자열 그대로 함수처럼 사용할 수 있음
+
+            }
+            if ((mx > rightbx && mx < rightbx + objwid) && (my > rightby && my < rightby + objhei)) {
+                random = Math.floor(Math.random() * 3);
+                go(40 + Math.floor(Math.random() * 20));
+                eval(eve[2][random]); //eval을 쓰면 배열안의 문자열 그대로 함수처럼 사용할 수 있음
+            }
+        }
+
+        function rsp_click(ev)
+        {
+            var mx;
+            var my;
+            if (ev.layerX || ev.layerX == 0) {
+                mx = ev.layerX;
+                my = ev.layerY;
+            }
+            else if (ev.offsetX || ev.offsetY == 0) {
+                mx = ev.offsetX;
+                my = ev.offsetY;
+            }
+
+            //가위
+            if ((mx > leftbx && mx < leftbx + objwid) && (my > leftby + 100 && my < leftby + 100 + objhei)){
+                char_rsp = 0;
+                com_rsp = Math.floor(Math.random() * 3);
+                result_rsp = rsp(char_rsp, com_rsp);
+                if (now_trap == 1) {
+                    trap_ing(result_rsp);
+                }
+                if (now_monster == 1) {
+                    monster_ing(result_rsp, who);
+                }
+            }
+            //바위
+            if ((mx > centerbx && mx < centerbx + objwid) && (my > centerby + 100 && my < centerby + 100 + objhei)) {
+                char_rsp = 1;
+                com_rsp = Math.floor(Math.random() * 3);
+                result_rsp = rsp(char_rsp, com_rsp);
+                if (now_trap == 1) {
+                    trap_ing(result_rsp);
+                }
+                if (now_monster == 1) {
+                    monster_ing(result_rsp, who);
+                }
+            }
+            //보
+            if ((mx > rightbx && mx < rightbx + objwid) && (my > rightby + 100 && my < rightby + 100 + objhei)) {
+                char_rsp = 2;
+                com_rsp = Math.floor(Math.random() * 3);
+                result_rsp = rsp(char_rsp, com_rsp);
+                if (now_trap == 1) {
+                    trap_ing(result_rsp);
+                }
+                if (now_monster == 1) {
+                    monster_ing(result_rsp, who);
+                }
+            }
+        }
+
+        function statup_click(ev)
+        {
+            var mx;
+            var my;
+            if (ev.layerX || ev.layerX == 0) {
+                mx = ev.layerX;
+                my = ev.layerY;
+            }
+            else if (ev.offsetX || ev.offsetY == 0) {
+                mx = ev.offsetX;
+                my = ev.offsetY;
+            }
+            if ((mx > apupbx && mx < apupbx + upleng) && (my > apupby && my < apupby + upleng)) {
+                char.ap = char.ap + 10;
+                char.point--;
+                draw_stat_char();
+            }
+            if ((mx > dpupbx && mx < dpupbx + upleng) && (my > dpupby && my < dpupby + upleng)) {
+                char.dp = char.dp + 5;
+                char.point--;
+                draw_stat_char();
+            }
+            if ((mx > hpupbx && mx < hpupbx + upleng) && (my > hpupby && my < hpupby + upleng)) {
+                char.max_hp = char.max_hp + 50;
+                char.now_hp = char.now_hp + 50;
+                char.point--;
+                draw_stat_char();
+            }
+            if(char.point <= 0)
+            {
+                statclick.removeEventListener('click', statup_click, false);
+            }
+        }
+
+        function start() {
+            canvasclick.removeEventListener('click', start_click, false);
+            canvasclick.addEventListener('click', arrow_click, false);
+            draw_back();
+            draw_char();
+            draw_stat_char();
+            draw_arrow();
+            draw_meter();
+        }
+
+        function gameover() {
+            canvasclick.removeEventListener('click', rsp_click, false);
+            canvasclick.removeEventListener('click', arrow_click, false);
+            setTimeout(oversound, 2000);
+            setTimeout(draw_gameover, 2000);
+            setTimeout(draw_meter, 2000);
+            canvasclick.addEventListener('click', restart_click, false);
+        }
+
+        function oversound() {
+            music[0].pause();
+            music[2].play();
+        }
+
+        function init() {
+            ctx = document.getElementById('canvas').getContext('2d');
+            canvasclick = document.getElementById('canvas');
+            canvasclick.addEventListener('click', start_click, false);
+            statclick = document.getElementById('canvas');
+            music = document.getElementsByTagName("audio");
+            music[0].play();
+            draw_start();
+        }
+    </script>
+</head>
+<body onload="init();">
+    <canvas id="canvas" width="900" height="500">
+        해당 브라우저는 HTML5의 Canvas 요소를 지원하지 않습니다. 좋은 브라우저를 씁시다.
+    </canvas>
+    <div class="box1">
+        <h1 align="center">&nbsp&nbspC&nbsp-&nbspMonster World&nbsp&nbsp</h1>
+    </div>
+    <div class="box2">
+        <h2 align="center"><게임 사용 설명서></h2>
+        <p></p>
+        <h5 align="center">왼쪽 길(중급자 사냥터) : 강한 몬스터, 25% 체력회복, 함정 출현</h5>
+        <h5 align="center">&nbsp&nbsp&nbsp&nbsp가운데 길(고급자 사냥터) : 보스 몬스터, 50% 체력회복, 함정 출현&nbsp&nbsp&nbsp&nbsp</h5>
+        <h5 align="center">오른쪽 길(초보자 사냥터) : 약한 몬스터, 10% 체력회복, 함정 출현</h5>
+        <h5 align="center">-----------------------------------------</h5>
+        <h5 align="center">어려운 사냥터로 갈 수록 거리가 많이 증가합니다.</h5>
+        <h5 align="center">가위바위보 비길경우 : 캐릭터와 몬스터 둘다 데미지</h5>
+    </div>
+    <audio autobuffer loop src="./aud/main.ogg"></audio>
+    <audio autobuffer src="./aud/att.ogg"></audio>
+    <audio autobuffer src="./aud/gameover.ogg"></audio>
+    <audio autobuffer src="./aud/att.ogg"></audio>
+</body>
+</html>
