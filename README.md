@@ -14,7 +14,7 @@ C Monster World Web Version (2013). Very Not Funny
 ![C Monster World Web Ver Screenshot03](https://github.com/uyu423/C-Monster-World-Web-Game/blob/master/screenshot03.png)
 ![C Monster World Web Ver Screenshot04](https://github.com/uyu423/C-Monster-World-Web-Game/blob/master/screenshot04.png)
 * 모티브로 한 게임은 [Palmple Inc.](http://www.palmple.com/)의 __[데빌메이커: 도쿄](http://www.palmple.com/devilmaker/intro)__ 게임이다.
-* 사전에 만들어본 __[C-Monster World Console Version](https://github.com/uyu423/C-Monster-World-Console-Game)__에 비해 변화가 꽤 있다.
+* 사전에 만들어본 __[C-Monster World Console Version](https://github.com/uyu423/C-Monster-World-Console-Game)__에 비해 변화가 꽤 있다. 프로젝트 발표 하루 전날 Source Logic과 알고리즘 갈아 엎는다고 피똥쌌다.
 * 기본 기능는 __진행 방향 선택__, __캐릭터 스탯 투자__ 정도.
 * __진행 방향 선택__을 택하면 __여러 이벤트가 확률적__으로 나타난다. (몬스터 출현, 함정 출현, 경험치 발견, 체력 회복)
 * 전투 시스템으로 __가위바위보__를 채택했다.
